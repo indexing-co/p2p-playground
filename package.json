@@ -25,7 +25,9 @@
     "@libp2p/mplex": "^10.0.13",
     "@libp2p/tcp": "^9.0.13",
     "@multiformats/multiaddr": "^12.1.14",
+    "knex": "^3.1.0",
     "libp2p": "^1.2.1",
+    "sqlite3": "^5.1.7",
     "web3": "^4.4.0"
   }
 }

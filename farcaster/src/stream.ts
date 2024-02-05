@@ -1,45 +1,23 @@
+import { GossipMessage, MessageType } from "@farcaster/hub-nodejs";
+import { bootstrap } from "@libp2p/bootstrap";
 import { createLibp2p } from "libp2p";
 import { gossipsub } from "@chainsafe/libp2p-gossipsub";
-import { tcp } from "@libp2p/tcp";
-import { mplex } from "@libp2p/mplex";
-import { noise } from "@chainsafe/libp2p-noise";
-import { multiaddr } from "@multiformats/multiaddr";
-import { bootstrap } from "@libp2p/bootstrap";
-import { mdns } from "@libp2p/mdns";
 import { identify } from "@libp2p/identify";
-import Web3 from "web3";
-import {
-  GossipMessage,
-  GossipVersion,
-  MessageType,
-} from "@farcaster/hub-nodejs";
+import { mdns } from "@libp2p/mdns";
+import { mplex } from "@libp2p/mplex";
+import { multiaddr } from "@multiformats/multiaddr";
+import { noise } from "@chainsafe/libp2p-noise";
+import { tcp } from "@libp2p/tcp";
+
+import { BOOTSTRAP_NODES, VALID_TOPICS, getUniqMsgId } from "./utils.js";
 
 type FarcasterMessageHandler = (
   farcasterMsg: GossipMessage
 ) => void | Promise<void>;
 
-const BOOTSTRAP_NODES = [
-  "/dns/hoyt.farcaster.xyz/tcp/2282",
-  "/dns/lamia.farcaster.xyz/tcp/2282",
-  "/dns/nemes.farcaster.xyz/tcp/2282",
-];
-const VALID_TOPICS = ["f_network_1_primary", "f_network_1_contact_info"];
-
 const SUBSCRIPTIONS: {
   [key in MessageType]?: Record<string, FarcasterMessageHandler>;
 } = {};
-
-function getUniqMsgId(topic: string, data: Uint8Array) {
-  if (topic.includes(VALID_TOPICS[0])) {
-    const farcasterMsg = GossipMessage.decode(data);
-    if (farcasterMsg && farcasterMsg.version === GossipVersion.V1_1) {
-      if (farcasterMsg.message !== undefined) {
-        return farcasterMsg.message?.hash ?? new Uint8Array();
-      }
-    }
-  }
-  return Buffer.from(Web3.utils.sha3(data) as string);
-}
 
 async function handleMessage(farcasterMsg: GossipMessage) {
   const msgType = farcasterMsg?.message?.data?.type as MessageType;
@@ -56,7 +34,7 @@ async function handleMessage(farcasterMsg: GossipMessage) {
   }
 }
 
-export async function start() {
+export async function startStream() {
   const node = await createLibp2p({
     transports: [tcp()],
     streamMuxers: [mplex()],
@@ -99,7 +77,9 @@ export async function start() {
     void node
       .dial(multiaddr(addr))
       .then(() => console.log("Connected to peer", addr))
-      .catch((e) => console.error("Failed dialing", addr, "error:", e));
+      .catch((e) =>
+        console.error("Failed dialing", addr, "error:", (e as Error).message)
+      );
   }
 
   for (const topic of VALID_TOPICS) {
@@ -128,8 +108,3 @@ export function removeSubscription(msgType: MessageType, id: string) {
     id
   ];
 }
-
-await start();
-await addSubscription(MessageType["CAST_ADD"], (msg) =>
-  console.log(JSON.stringify(GossipMessage.toJSON(msg), null, 2))
-);
