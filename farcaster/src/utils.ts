@@ -6,6 +6,8 @@ export const BOOTSTRAP_NODES = [
   "/dns/hoyt.farcaster.xyz/tcp/2282",
   "/dns/lamia.farcaster.xyz/tcp/2282",
   "/dns/nemes.farcaster.xyz/tcp/2282",
+  "/dns/bootstrap.neynar.com/tcp/2282",
+  "/dns/192.168.50.238/tcp/2282",
 ];
 
 export const VALID_TOPICS = ["f_network_1_primary", "f_network_1_contact_info"];

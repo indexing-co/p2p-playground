@@ -19,7 +19,7 @@ async function batchWriter() {
       });
     }, 5000);
 
-    await getDB().batchInsert("casts", batch);
+    await getDB().into("casts").insert(batch).onConflict().ignore();
     console.log(
       `[${new Date().toISOString()}] Wrote batch with`,
       batch.length,

@@ -11,23 +11,23 @@
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@types/node": "^20.11.16",
-    "tsx": "^4.7.0",
-    "typescript": "^5.3.3"
+    "@types/node": "^20.14.2",
+    "tsx": "^4.14.1",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@chainsafe/libp2p-gossipsub": "^11.2.0",
+    "@chainsafe/libp2p-gossipsub": "^13.0.0",
     "@chainsafe/libp2p-noise": "^15.0.0",
-    "@farcaster/hub-nodejs": "^0.10.23",
-    "@libp2p/bootstrap": "^10.0.13",
-    "@libp2p/identify": "^1.0.12",
-    "@libp2p/mdns": "^10.0.13",
-    "@libp2p/mplex": "^10.0.13",
-    "@libp2p/tcp": "^9.0.13",
-    "@multiformats/multiaddr": "^12.1.14",
+    "@farcaster/hub-nodejs": "^0.11.14",
+    "@libp2p/bootstrap": "^10.0.24",
+    "@libp2p/identify": "^2.0.2",
+    "@libp2p/mdns": "^10.0.24",
+    "@libp2p/mplex": "^10.0.24",
+    "@libp2p/tcp": "^9.0.26",
+    "@multiformats/multiaddr": "^12.3.0",
     "knex": "^3.1.0",
-    "libp2p": "^1.2.1",
+    "libp2p": "^1.6.0",
     "sqlite3": "^5.1.7",
-    "web3": "^4.4.0"
+    "web3": "^4.9.0"
   }
 }

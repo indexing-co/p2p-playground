@@ -1,4 +1,4 @@
-import { GossipMessage, MessageType } from "@farcaster/hub-nodejs";
+import { GossipMessage, Message, MessageType } from "@farcaster/hub-nodejs";
 import { bootstrap } from "@libp2p/bootstrap";
 import { createLibp2p } from "libp2p";
 import { gossipsub } from "@chainsafe/libp2p-gossipsub";
@@ -20,6 +20,15 @@ const SUBSCRIPTIONS: {
 } = {};
 
 async function handleMessage(farcasterMsg: GossipMessage) {
+  if (Array.isArray(farcasterMsg?.messageBundle?.messages)) {
+    await Promise.all(
+      farcasterMsg?.messageBundle?.messages.map((message) =>
+        handleMessage({ message } as GossipMessage)
+      )
+    );
+    return;
+  }
+
   const msgType = farcasterMsg?.message?.data?.type as MessageType;
   if (SUBSCRIPTIONS[msgType]) {
     await Promise.all(
